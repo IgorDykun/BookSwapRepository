@@ -1,0 +1,6 @@
+@BookSwap.Aggregator_HostAddress = http://localhost:5117
+
+GET {{BookSwap.Aggregator_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

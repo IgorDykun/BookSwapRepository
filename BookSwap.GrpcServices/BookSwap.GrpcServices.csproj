@@ -1,0 +1,31 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Grpc.AspNetCore" Version="2.57.0" />
+    <PackageReference Include="MediatR" Version="13.1.0" />
+    <PackageReference Include="MediatR.Extensions.Microsoft.DependencyInjection" Version="11.1.0" />
+    <PackageReference Include="OpenTelemetry" Version="1.14.0" />
+    <PackageReference Include="OpenTelemetry.Exporter.OpenTelemetryProtocol" Version="1.14.0" />
+    <PackageReference Include="OpenTelemetry.Extensions.Hosting" Version="1.14.0" />
+    <PackageReference Include="OpenTelemetry.Instrumentation.AspNetCore" Version="1.14.0" />
+    <PackageReference Include="OpenTelemetry.Instrumentation.Http" Version="1.14.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Protobuf Include="..\BookSwap.GrpcContracts\Protos\books.proto" Link="Protos\books.proto" GrpcServices="Server" />
+  </ItemGroup>
+  
+  <ItemGroup>
+  <ProjectReference Include="..\BookSwap.Application\BookSwap.Application.csproj" />
+    <ProjectReference Include="..\BookSwap.Infrastructure\BookSwap.Infrastructure.csproj" />
+    <ProjectReference Include="..\BookSwap.Domain\BookSwap.Domain.csproj" />
+  </ItemGroup>
+
+  
+</Project>

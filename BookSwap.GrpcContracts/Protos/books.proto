@@ -1,0 +1,61 @@
+﻿syntax = "proto3";
+
+option csharp_namespace = "BookSwap.GrpcContracts";
+
+package books;
+
+service BooksService {
+  rpc GetBookById (GetBookByIdRequest) returns (BookReply);
+  rpc GetAllBooks (GetAllBooksRequest) returns (BooksListReply);
+  rpc CreateBook (CreateBookRequest) returns (BookReply);
+  rpc UpdateBook (UpdateBookRequest) returns (BookReply);
+  rpc DeleteBook (DeleteBookRequest) returns (DeleteBookReply);
+}
+
+message GetBookByIdRequest {
+  string id = 1;
+}
+
+message GetAllBooksRequest {}
+
+message UserSummaryRequest {
+  string id = 1;
+  string name = 2;
+}
+
+message CreateBookRequest {
+  string title = 1;
+  string author = 2;
+  UserSummaryRequest owner = 3;
+}
+
+
+message UpdateBookRequest {
+  string id = 1;
+  string title = 2;
+  string author = 3;
+}
+
+message DeleteBookRequest {
+  string id = 1;
+}
+
+message DeleteBookReply {
+  bool success = 1;
+}
+
+message UserSummaryReply {
+  string id = 1;
+  string name = 2;
+}
+
+message BookReply {
+  string id = 1;
+  string title = 2;
+  string author = 3;
+  UserSummaryReply owner = 4;
+}
+
+message BooksListReply {
+  repeated BookReply books = 1;
+}

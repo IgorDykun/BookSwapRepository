@@ -1,0 +1,6 @@
+﻿namespace BookSwap.GrpcServices.Protos
+{
+    public class books
+    {
+    }
+}
