@@ -18,4 +18,8 @@
     <Using Include="Xunit" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\BookSwap.Aggregator\BookSwap.Aggregator.csproj" />
+  </ItemGroup>
+
 </Project>
