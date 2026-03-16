@@ -39,6 +39,11 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BookSwap.HealthChecks", "BookSwap.HealthChecks\BookSwap.HealthChecks.csproj", "{CF7F493F-2604-CB6C-D2C5-9A2D4841F862}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{8EC462FD-D22E-90A8-E5CE-7E832BA40C5D}"
+	ProjectSection(SolutionItems) = preProject
+		docker-compose.yml = docker-compose.yml
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BookSwap.TelegramBot", "BookSwap.TelegramBot\BookSwap.TelegramBot.csproj", "{83C8E3DE-6A0B-475B-9E86-C2C1283AE8B9}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -170,6 +175,18 @@ Global
 		{CF7F493F-2604-CB6C-D2C5-9A2D4841F862}.Release|x64.Build.0 = Release|Any CPU
 		{CF7F493F-2604-CB6C-D2C5-9A2D4841F862}.Release|x86.ActiveCfg = Release|Any CPU
 		{CF7F493F-2604-CB6C-D2C5-9A2D4841F862}.Release|x86.Build.0 = Release|Any CPU
+		{83C8E3DE-6A0B-475B-9E86-C2C1283AE8B9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{83C8E3DE-6A0B-475B-9E86-C2C1283AE8B9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{83C8E3DE-6A0B-475B-9E86-C2C1283AE8B9}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{83C8E3DE-6A0B-475B-9E86-C2C1283AE8B9}.Debug|x64.Build.0 = Debug|Any CPU
+		{83C8E3DE-6A0B-475B-9E86-C2C1283AE8B9}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{83C8E3DE-6A0B-475B-9E86-C2C1283AE8B9}.Debug|x86.Build.0 = Debug|Any CPU
+		{83C8E3DE-6A0B-475B-9E86-C2C1283AE8B9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{83C8E3DE-6A0B-475B-9E86-C2C1283AE8B9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{83C8E3DE-6A0B-475B-9E86-C2C1283AE8B9}.Release|x64.ActiveCfg = Release|Any CPU
+		{83C8E3DE-6A0B-475B-9E86-C2C1283AE8B9}.Release|x64.Build.0 = Release|Any CPU
+		{83C8E3DE-6A0B-475B-9E86-C2C1283AE8B9}.Release|x86.ActiveCfg = Release|Any CPU
+		{83C8E3DE-6A0B-475B-9E86-C2C1283AE8B9}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

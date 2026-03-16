@@ -1,11 +1,19 @@
+using BookSwap.Aggregator.Data;
+using BookSwap.Aggregator.Services;
+using BookSwap.Infrastructure.MongoDb;
 using HealthChecks.UI.Client;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
-using Serilog;
-using BookSwap.Infrastructure.MongoDb;
-using BookSwap.Aggregator.Services; // Додано для RedisStreamPublisher
+using Microsoft.EntityFrameworkCore;
 using OpenTelemetry.Resources;
 using OpenTelemetry.Trace;
+using Serilog;
 using StackExchange.Redis;
+using System;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
+using BookSwap.Aggregator.Data; 
+using BookSwap.Aggregator.Models;
+
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -15,12 +23,8 @@ Log.Logger = new LoggerConfiguration()
     .CreateLogger();
 builder.Host.UseSerilog();
 
-// 2. Підключення шару Infrastructure (БД та Репозиторії)
-// Тут реєструються ваші MongoDbContext, IUserRepository, IBookRepository тощо.
 builder.Services.AddInfrastructure(builder.Configuration);
 
-// 3. Redis та Publisher (ВИПРАВЛЕНО)
-// Перевіряємо різні варіанти назв у конфігурації (Redis__Configuration для Docker або Redis:Configuration для локалу)
 var redisConnectionString = builder.Configuration["Redis__Configuration"]
                             ?? builder.Configuration["Redis:Configuration"]
                             ?? "localhost:6379";
@@ -42,19 +46,23 @@ builder.Services.AddOpenTelemetry()
     .WithTracing(tracing => {
         tracing.SetResourceBuilder(ResourceBuilder.CreateDefault().AddService("BookSwap.Aggregator"))
                .AddAspNetCoreInstrumentation()
-               .AddHttpClientInstrumentation() // Корисно для відстеження зовнішніх викликів
+               .AddHttpClientInstrumentation()
                .AddOtlpExporter();
     });
 
+builder.Services.AddHttpClient();
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddHealthChecks();
 
+builder.Services.AddDbContext<AppDbContext>(options =>
+    options.UseSqlite("Data Source=user_profiles.db"));
+
 var app = builder.Build();
 
 // 5. Pipeline
-// Swagger завжди доступний на корені (/) для зручності розробки
+
 app.UseSwagger();
 app.UseSwaggerUI(c => {
     c.SwaggerEndpoint("/swagger/v1/swagger.json", "BookSwap API v1");
