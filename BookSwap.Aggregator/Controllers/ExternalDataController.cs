@@ -1,8 +1,8 @@
 ﻿using BookSwap.Aggregator.Data;
 using BookSwap.Aggregator.Models;
+using BookSwap.Aggregator.Services; 
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Caching.Distributed;
-using MongoDB.Bson.IO;
 using OpenTelemetry.Trace;
 using System.Text.Json;
 using NewtonsoftJson = Newtonsoft.Json.JsonConvert;
@@ -17,13 +17,20 @@ namespace BookSwap.Aggregator.Controllers
         private readonly IDistributedCache _cache;
         private readonly ILogger<ExternalDataController> _logger;
         private readonly AppDbContext _context;
+        private readonly ReminderParser _parser; 
 
-        public ExternalDataController(IHttpClientFactory httpClientFactory, IDistributedCache cache, ILogger<ExternalDataController> logger, AppDbContext context)
+        public ExternalDataController(
+            IHttpClientFactory httpClientFactory,
+            IDistributedCache cache,
+            ILogger<ExternalDataController> logger,
+            AppDbContext context,
+            ReminderParser parser)
         {
             _httpClientFactory = httpClientFactory;
             _cache = cache;
             _logger = logger;
             _context = context;
+            _parser = parser;
         }
 
         [HttpGet("search-books/{title}")]
@@ -39,7 +46,7 @@ namespace BookSwap.Aggregator.Controllers
                 var cachedData = await _cache.GetStringAsync(cacheKey, cancellationToken);
                 if (!string.IsNullOrEmpty(cachedData))
                 {
-                    return Ok(System.Text.Json.JsonSerializer.Deserialize<object>(cachedData));
+                    return Ok(JsonSerializer.Deserialize<object>(cachedData));
                 }
 
                 var client = _httpClientFactory.CreateClient();
@@ -69,7 +76,7 @@ namespace BookSwap.Aggregator.Controllers
                 }
 
                 var finalResult = new { items = formattedItems };
-                var serializedResult = System.Text.Json.JsonSerializer.Serialize(finalResult);
+                var serializedResult = JsonSerializer.Serialize(finalResult);
 
                 await _cache.SetStringAsync(cacheKey, serializedResult, new DistributedCacheEntryOptions
                 {
@@ -95,6 +102,29 @@ namespace BookSwap.Aggregator.Controllers
                 _context.UserProfiles.Add(profile);
                 await _context.SaveChangesAsync();
                 _logger.LogInformation("Створено новий профіль для ID: {Id}", request.UserId);
+            }
+
+            if (request.Message.Contains("нагадай", StringComparison.OrdinalIgnoreCase))
+            {
+                var (time, text) = _parser.Parse(request.Message);
+
+                if (time.HasValue)
+                {
+                    var reminder = new Reminder
+                    {
+                        UserId = request.UserId,
+                        Text = text ?? "Без тексту",
+                        NotifyAt = time.Value,
+                        IsSent = false
+                    };
+
+                    _context.Reminders.Add(reminder);
+                    await _context.SaveChangesAsync(ct);
+
+                    return Ok(new { message = $"Зрозумів! Нагадаю о {time.Value:HH:mm, dd MMMM}." });
+                }
+
+                return Ok(new { message = "Я зрозумів, що це нагадування, але не впізнав час. Напиши, наприклад: 'Нагадай завтра о 15:00 купити книгу'" });
             }
 
             var client = _httpClientFactory.CreateClient();

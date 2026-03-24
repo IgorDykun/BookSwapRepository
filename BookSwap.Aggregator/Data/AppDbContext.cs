@@ -7,5 +7,6 @@ namespace BookSwap.Aggregator.Data
     {
         public AppDbContext(DbContextOptions<AppDbContext> options) : base(options) { }
         public DbSet<UserProfile> UserProfiles { get; set; }
+        public DbSet<Reminder> Reminders { get; set; }
     }
 }

@@ -1,0 +1,47 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "aggregator-app.fullname" . }}
+  labels:
+    {{- include "aggregator-app.labels" . | nindent 4 }}
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      {{- include "aggregator-app.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      labels:
+        {{- include "aggregator-app.selectorLabels" . | nindent 8 }}
+    spec:
+      containers:
+        - name: {{ .Chart.Name }}
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          ports:
+            - name: http
+              containerPort: 8080
+              protocol: TCP
+          env:
+            - name: ASPNETCORE_ENVIRONMENT
+              value: "Development"
+            - name: MongoDb__ConnectionString
+              value: "mongodb://mongo-db-mongodb:27017"
+            - name: MongoDb__DatabaseName
+              value: "BookSwapDB"
+            - name: Redis__Configuration
+              value: "redis-monitoring-master:6379"
+            - name: ASPNETCORE_URLS
+              value: "http://+:8080"
+          livenessProbe:
+            httpGet:
+              path: /Health/health
+              port: http
+            initialDelaySeconds: 15
+            periodSeconds: 20
+          readinessProbe:
+            httpGet:
+              path: /Health/health
+              port: http
+            initialDelaySeconds: 5
+            periodSeconds: 10
