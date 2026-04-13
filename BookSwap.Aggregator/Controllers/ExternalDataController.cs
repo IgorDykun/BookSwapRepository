@@ -17,20 +17,23 @@ namespace BookSwap.Aggregator.Controllers
         private readonly IDistributedCache _cache;
         private readonly ILogger<ExternalDataController> _logger;
         private readonly AppDbContext _context;
-        private readonly ReminderParser _parser; 
+        private readonly ReminderParser _parser;
+        private readonly CalendarManager _calendarManager;
 
         public ExternalDataController(
             IHttpClientFactory httpClientFactory,
             IDistributedCache cache,
             ILogger<ExternalDataController> logger,
             AppDbContext context,
-            ReminderParser parser)
+            ReminderParser parser,
+            CalendarManager calendarManager)
         {
             _httpClientFactory = httpClientFactory;
             _cache = cache;
             _logger = logger;
             _context = context;
             _parser = parser;
+            _calendarManager = calendarManager;
         }
 
         [HttpGet("search-books/{title}")]
@@ -102,6 +105,22 @@ namespace BookSwap.Aggregator.Controllers
                 _context.UserProfiles.Add(profile);
                 await _context.SaveChangesAsync();
                 _logger.LogInformation("Створено новий профіль для ID: {Id}", request.UserId);
+            }
+
+            if (request.Message.Contains("створи подію", StringComparison.OrdinalIgnoreCase) ||
+                request.Message.Contains("в календар", StringComparison.OrdinalIgnoreCase))
+            {
+                await _calendarManager.AuthenticateAsync(); 
+                string resultMessage = await _calendarManager.CreateEventFromTextAsync(request.Message);
+                return Ok(new { message = resultMessage });
+            }
+
+            if (request.Message.Contains("мої події", StringComparison.OrdinalIgnoreCase) ||
+                request.Message.Contains("найближчі події", StringComparison.OrdinalIgnoreCase))
+            {
+                await _calendarManager.AuthenticateAsync(); 
+                string resultMessage = await _calendarManager.GetUpcomingEventsAsync(5);
+                return Ok(new { message = resultMessage });
             }
 
             if (request.Message.Contains("нагадай", StringComparison.OrdinalIgnoreCase))

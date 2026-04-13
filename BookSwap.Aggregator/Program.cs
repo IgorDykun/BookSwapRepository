@@ -1,18 +1,19 @@
+using BookSwap.Aggregator;
 using BookSwap.Aggregator.Data;
+using BookSwap.Aggregator.Data; 
+using BookSwap.Aggregator.Models;
 using BookSwap.Aggregator.Services;
 using BookSwap.Infrastructure.MongoDb;
 using HealthChecks.UI.Client;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using OpenTelemetry.Resources;
 using OpenTelemetry.Trace;
 using Serilog;
 using StackExchange.Redis;
 using System;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore;
-using BookSwap.Aggregator.Data; 
-using BookSwap.Aggregator.Models;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -62,6 +63,7 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 
 builder.Services.AddSingleton<ReminderParser>();
 builder.Services.AddHostedService<ReminderWorker>();
+builder.Services.AddScoped<CalendarManager>();
 
 var app = builder.Build();
 

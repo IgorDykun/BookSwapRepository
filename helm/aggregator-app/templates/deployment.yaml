@@ -26,11 +26,11 @@ spec:
             - name: ASPNETCORE_ENVIRONMENT
               value: "Development"
             - name: MongoDb__ConnectionString
-              value: "mongodb://mongo-db-mongodb:27017"
+              value: "mongodb://mongo-db:27017"
             - name: MongoDb__DatabaseName
               value: "BookSwapDB"
             - name: Redis__Configuration
-              value: "redis-monitoring-master:6379"
+              value: "redis-monitoring:6379"
             - name: ASPNETCORE_URLS
               value: "http://+:8080"
           livenessProbe:
