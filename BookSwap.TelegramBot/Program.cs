@@ -1,10 +1,13 @@
 using BookSwap.TelegramBot;
 
-var builder = Host.CreateApplicationBuilder(args);
+var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddHttpClient();
-
+builder.Services.AddControllers(); 
 builder.Services.AddHostedService<Worker>();
 
-var host = builder.Build();
-host.Run();
+var app = builder.Build();
+
+app.MapControllers(); 
+
+app.Run();

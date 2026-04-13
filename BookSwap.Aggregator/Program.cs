@@ -59,6 +59,10 @@ builder.Services.AddHealthChecks();
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseSqlite("Data Source=user_profiles.db"));
 
+
+builder.Services.AddSingleton<ReminderParser>();
+builder.Services.AddHostedService<ReminderWorker>();
+
 var app = builder.Build();
 
 // 5. Pipeline
