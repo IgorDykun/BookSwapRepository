@@ -60,6 +60,7 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "k8s", "k8s", "{AF3B369B-216A-4991-B6BF-B2D8A540B7C3}"
 	ProjectSection(SolutionItems) = preProject
 		aggregator.yaml = aggregator.yaml
+		deployment.yml = deployment.yml
 		mongodb.yaml = mongodb.yaml
 		redis.yaml = redis.yaml
 	EndProjectSection
